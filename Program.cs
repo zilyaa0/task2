@@ -1,4 +1,7 @@
+using ask2.Models;
+using ask2.Repositories;
 using ask2.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace ask2
 {
@@ -8,13 +11,19 @@ namespace ask2
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddScoped<ILetterService, LetterService>();
+            #region [services]
+            builder.Services.AddSingleton<IImapService, ImapService>();
+            builder.Services.AddSingleton<ILetterService, LetterService>();
+            builder.Services.AddTransient<ILetterRepository, LetterRepository>();
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddDbContext<LettersContext>(options =>
+                options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+            #endregion
 
+            #region [start point]
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -24,14 +33,17 @@ namespace ask2
                 app.UseSwaggerUI();
             }
 
+            var imapService = app.Services.GetRequiredService<IImapService>();
+            imapService.Start();
+
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
-
             app.MapControllers();
 
             app.Run();
+            #endregion
         }
     }
 }

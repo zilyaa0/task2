@@ -10,21 +10,26 @@ namespace ask2.Controllers
     [ApiController]
     public class LetterController : ControllerBase
     {
-        private ILetterService letterService;
+        #region [fields]
+        private readonly ILetterService _letterService;
         private readonly ILogger<LetterController> _logger;
+        #endregion
 
-        public LetterController(ILogger<LetterController> logger, ILetterService service)
+        #region [constructor]
+        public LetterController(ILogger<LetterController> logger, ILetterService letterService)
         {
             _logger = logger;
-            letterService = service;
+            _letterService = letterService;
         }
+        #endregion
 
+        #region [methods]
         // GET: api/<LetterController>
         [HttpGet]
-        public IEnumerable<Letter> Get()
+        public async Task<ActionResult<List<Letter>>> Get()
         {
-            IEnumerable<Letter> list = letterService.ReadLetter();
-            return list;
+            return Ok(_letterService.GetLetters());
         }
+        #endregion
     }
 }
