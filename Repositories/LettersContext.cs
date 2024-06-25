@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ask2.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
-namespace ask2.Models
+namespace ask2.Repositories
 {
     public class LettersContext : DbContext
     {
-        #region [methods]
+        #region methods
         public LettersContext(DbContextOptions<LettersContext> options) : base(options)
         {
 

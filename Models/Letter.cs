@@ -4,14 +4,14 @@ namespace ask2.Models
     [Serializable]
     public class Letter
     {
-        #region [fields]
+        #region fields
         public int Id { get; set; }
         public string Sender { get; set; }
         public string Headers { get; set; }
         public string Text { get; set; }
         #endregion
 
-        #region [constructor]
+        #region constructor
         public Letter(string sender, string headers, string text)
         {
             Sender = sender;
@@ -20,7 +20,7 @@ namespace ask2.Models
         }
         #endregion
 
-        #region [methods]
+        #region methods
         public override bool Equals(object? obj)
         {
             return obj is Letter letter &&

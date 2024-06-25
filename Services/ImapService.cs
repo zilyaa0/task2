@@ -6,21 +6,21 @@ using ask2.Repositories;
 
 namespace ask2.Services
 {
-    #region [interface]
+    #region interface
     public interface IImapService
     {
         void Start();
     }
     #endregion
 
-    public class ImapService : IImapService
+     class ImapService : IImapService
     {
-        #region [fields]
+        #region fields
         private readonly IConfiguration _configuration;
         private readonly ILetterRepository _letterRepository;
         #endregion
 
-        #region [constructor]
+        #region constructor
         public ImapService(IConfiguration configuration, ILetterRepository letterRepository)
         {
             _configuration = configuration;
@@ -28,27 +28,34 @@ namespace ask2.Services
         }
         #endregion
 
-        #region [methods]
+        #region methods
         public void Start()
         {
             Thread thread = new Thread(() =>
             {
                 while (true)
                 {
-                    using (var client = new ImapClient())
+                    try
                     {
-                        client.Connect("imap.mail.ru", 993, SecureSocketOptions.SslOnConnect);
-
-                        client.Authenticate(_configuration["Email"], _configuration["Password"]);
-
-                        var inbox = client.Inbox;
-                        inbox.Open(FolderAccess.ReadOnly);
-                        for (int i = 0; i < inbox.Count; i++)
+                        using (var client = new ImapClient())
                         {
-                            var message = inbox.GetMessage(i);
-                            AddLetter(new Letter(message.From.ToString(), message.Subject, message.TextBody));
+                            client.Connect("imap.mail.ru", 993, SecureSocketOptions.SslOnConnect);
+
+                            client.Authenticate(_configuration["Email"], _configuration["Password"]);
+
+                            var inbox = client.Inbox;
+                            inbox.Open(FolderAccess.ReadOnly);
+                            for (int i = 0; i < inbox.Count; i++)
+                            {
+                                var message = inbox.GetMessage(i);
+                                AddLetter(new Letter(message.From.ToString(), message.Subject, message.TextBody));
+                            }
+                            client.Disconnect(true);
                         }
-                        client.Disconnect(true);
+                    }
+                    catch
+                    {
+                        return;
                     }
                     Thread.Sleep(1000 * 60);
                 }

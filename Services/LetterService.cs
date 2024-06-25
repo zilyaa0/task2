@@ -11,33 +11,39 @@ using Newtonsoft.Json;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using ask2.Repositories;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ask2.Services
 {
-    #region [interface]
+    #region interface
     public interface ILetterService
     {
         public List<Letter> GetLetters();
+        public List<Letter> GetLettersByPage(int page, int count);
     }
     #endregion
 
-    public class LetterService : ILetterService
+     class LetterService : ILetterService
     {
-        #region [fields]
+        #region fields
         private readonly ILetterRepository _letterRepository;
         #endregion
 
-        #region [constructor]
+        #region constructor
         public LetterService(ILetterRepository letterRepository)
         {
             _letterRepository = letterRepository;
         }
         #endregion
 
-        #region [methods]
+        #region methods
         public List<Letter> GetLetters()
         {
-            return _letterRepository.ReadAllLetters().ToList();
+            return _letterRepository.ReadAllLetters();
+        }
+        public List<Letter> GetLettersByPage(int page, int count)
+        {
+            return _letterRepository.ReadLettersByPage(page, count);
         }
         #endregion
     }
