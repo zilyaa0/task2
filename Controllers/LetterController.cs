@@ -25,19 +25,16 @@ namespace ask2.Controllers
         #endregion
 
         #region methods
-        // GET: api/<LetterController>
         [HttpGet]
-        public ActionResult<List<Letter>> GetAllLetters()
-        {
-            return Ok(_letterService.GetLetters());
-        }
-
-        [HttpGet("{page}, {count}")]
-        public ActionResult<List<Letter>> GetLettersByPage(int page, int count)
+        public ActionResult<List<Letter>> GetLettersByPage(int page, int limit)
         {
             try
             {
-                return Ok(_letterService.GetLettersByPage(page, count));
+                var lettersByPage = _letterService.GetLettersByPage(page, limit);
+                if (lettersByPage.Count != 0)
+                    return Ok(lettersByPage);
+                else
+                    return Ok("No letters in this page");
             }
             catch (Exception ex)
             {

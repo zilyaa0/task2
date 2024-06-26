@@ -7,7 +7,7 @@ using ask2.Repositories;
 namespace ask2.Services
 {
     #region interface
-    public interface IImapService
+    interface IImapService
     {
         void Start();
     }
@@ -48,7 +48,7 @@ namespace ask2.Services
                             for (int i = 0; i < inbox.Count; i++)
                             {
                                 var message = inbox.GetMessage(i);
-                                AddLetter(new Letter(message.From.ToString(), message.Subject, message.TextBody));
+                                AddLetter(new Letter(message.From.ToString(), message.Subject, message.TextBody, message.MessageId));
                             }
                             client.Disconnect(true);
                         }
@@ -65,15 +65,8 @@ namespace ask2.Services
         }
         private void AddLetter(Letter currentLetter)
         {
-            List<Letter> letters = _letterRepository.ReadAllLetters();
-            foreach (Letter letter in letters)
-            {
-                if (letter.GetHashCode() == currentLetter.GetHashCode())
-                {
-                    return;
-                }
-            }
-            _letterRepository.AddLetter(currentLetter);
+            if (_letterRepository.FindLetterByMessageId(currentLetter.MessageId))
+                _letterRepository.AddLetter(currentLetter);
         }
         #endregion
     }

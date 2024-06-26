@@ -26,6 +26,10 @@ namespace ask2.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("MessageId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Sender")
                         .IsRequired()
                         .HasColumnType("TEXT");

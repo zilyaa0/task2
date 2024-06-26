@@ -18,7 +18,8 @@ namespace ask2.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Sender = table.Column<string>(type: "TEXT", nullable: false),
                     Headers = table.Column<string>(type: "TEXT", nullable: false),
-                    Text = table.Column<string>(type: "TEXT", nullable: false)
+                    Text = table.Column<string>(type: "TEXT", nullable: false),
+                    MessageId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

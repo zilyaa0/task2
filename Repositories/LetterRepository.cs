@@ -4,11 +4,12 @@ using Microsoft.EntityFrameworkCore;
 namespace ask2.Repositories
 {
     #region interface
-    public interface ILetterRepository
+    interface ILetterRepository
     {
-        public void AddLetter(Letter letter);
-        public List<Letter> ReadAllLetters();
-        public List<Letter> ReadLettersByPage(int page, int count);
+        void AddLetter(Letter letter);
+        List<Letter> ReadLettersByPage(int page, int count);
+        bool FindLetterByMessageId(string messageId);
+
     }
     #endregion
 
@@ -35,22 +36,22 @@ namespace ask2.Repositories
             }
         }
 
-        public List<Letter> ReadAllLetters()
+        public bool FindLetterByMessageId(string messageId)
         {
             using (var db = _contextFactory.CreateDbContext())
-                return db.Letters.ToList() ?? new List<Letter>();
+            {
+                if (db.Letters.FirstOrDefault(x => x.MessageId == messageId) == null)
+                    return true;
+                else
+                    return false;
+            }
         }
 
         public List<Letter> ReadLettersByPage(int page, int count)
         {
             using (var db = _contextFactory.CreateDbContext())
             {
-                var allLetters = db.Letters.ToList();
-                List<Letter> lettersByPage = new List<Letter>();
-                for (int i = 0; i < count; i++)
-                {
-                    lettersByPage.Add(allLetters[(page - 1) * 10 + i]);
-                }
+                List<Letter> lettersByPage = db.Letters.Skip((page - 1) * count).Take(count).ToList();
                 return lettersByPage;
             }
         }

@@ -18,8 +18,7 @@ namespace ask2.Services
     #region interface
     public interface ILetterService
     {
-        public List<Letter> GetLetters();
-        public List<Letter> GetLettersByPage(int page, int count);
+        List<Letter> GetLettersByPage(int page, int count);
     }
     #endregion
 
@@ -37,13 +36,9 @@ namespace ask2.Services
         #endregion
 
         #region methods
-        public List<Letter> GetLetters()
+        public List<Letter> GetLettersByPage(int page, int limit)
         {
-            return _letterRepository.ReadAllLetters();
-        }
-        public List<Letter> GetLettersByPage(int page, int count)
-        {
-            return _letterRepository.ReadLettersByPage(page, count);
+            return _letterRepository.ReadLettersByPage(page, limit);
         }
         #endregion
     }

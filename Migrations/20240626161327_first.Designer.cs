@@ -10,7 +10,7 @@ using ask2.Repositories;
 namespace ask2.Migrations
 {
     [DbContext(typeof(LettersContext))]
-    [Migration("20240622112746_first")]
+    [Migration("20240626161327_first")]
     partial class first
     {
         /// <inheritdoc />
@@ -26,6 +26,10 @@ namespace ask2.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Headers")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MessageId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
