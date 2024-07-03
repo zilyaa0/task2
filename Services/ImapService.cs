@@ -3,6 +3,8 @@ using MailKit.Net.Imap;
 using MailKit.Security;
 using MailKit;
 using ask2.Repositories;
+using MailKit.Search;
+using MimeKit;
 
 namespace ask2.Services
 {
@@ -45,6 +47,7 @@ namespace ask2.Services
 
                             var inbox = client.Inbox;
                             inbox.Open(FolderAccess.ReadOnly);
+
                             for (int i = 0; i < inbox.Count; i++)
                             {
                                 var message = inbox.GetMessage(i);

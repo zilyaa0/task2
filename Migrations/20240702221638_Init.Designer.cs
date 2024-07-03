@@ -10,8 +10,8 @@ using ask2.Repositories;
 namespace ask2.Migrations
 {
     [DbContext(typeof(LettersContext))]
-    [Migration("20240626161327_first")]
-    partial class first
+    [Migration("20240702221638_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -7,7 +7,7 @@ namespace ask2.Repositories
     interface ILetterRepository
     {
         void AddLetter(Letter letter);
-        List<Letter> ReadLettersByPage(int page, int count);
+        LettersQueryResult ReadLetters(int page, int count, string searchString);
         bool FindLetterByMessageId(string messageId);
 
     }
@@ -47,12 +47,13 @@ namespace ask2.Repositories
             }
         }
 
-        public List<Letter> ReadLettersByPage(int page, int count)
+        public LettersQueryResult ReadLetters(int page, int count, string searchString)
         {
             using (var db = _contextFactory.CreateDbContext())
             {
-                List<Letter> lettersByPage = db.Letters.Skip((page - 1) * count).Take(count).ToList();
-                return lettersByPage;
+                List<Letter> lettersBySearchString = db.Letters.Where(x => x.Sender.Contains(searchString) || x.Headers.Contains(searchString)).ToList();
+                List <Letter> lettersByPage = lettersBySearchString.Skip((page - 1) * count).Take(count).ToList();
+                return new LettersQueryResult(lettersByPage, page, count, lettersBySearchString.Count());
             }
         }
         #endregion

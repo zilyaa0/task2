@@ -9,7 +9,7 @@ namespace ask2.Repositories
         #region methods
         public LettersContext(DbContextOptions<LettersContext> options) : base(options)
         {
-
+            
         }
         public DbSet<Letter> Letters { get; set; }
         #endregion

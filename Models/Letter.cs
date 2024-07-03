@@ -4,7 +4,7 @@ namespace ask2.Models
     [Serializable]
     public class Letter
     {
-        #region fields
+        #region properties
         public int Id { get; set; }
         public string Sender { get; set; }
         public string Headers { get; set; }

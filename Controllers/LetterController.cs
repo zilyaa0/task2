@@ -26,20 +26,15 @@ namespace ask2.Controllers
 
         #region methods
         [HttpGet]
-        public ActionResult<List<Letter>> GetLettersByPage(int page, int limit)
+        public IActionResult GetLettersByPage(int page, int limit, string searchString)
         {
-            try
-            {
-                var lettersByPage = _letterService.GetLettersByPage(page, limit);
-                if (lettersByPage.Count != 0)
-                    return Ok(lettersByPage);
-                else
-                    return Ok("No letters in this page");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);  
-            }
+            if (page <= 0)
+                return BadRequest(new { ErrorText = "Page должен быть больше 0" });
+            if (limit <= 0)
+                return BadRequest(new { ErrorText = "Limit должен быть больше 0" });
+
+            var lettersByPage = _letterService.GetLetters(page, limit, searchString);
+            return Ok(lettersByPage);
 
         }
         #endregion
