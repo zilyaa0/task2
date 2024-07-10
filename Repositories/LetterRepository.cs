@@ -51,9 +51,23 @@ namespace ask2.Repositories
         {
             using (var db = _contextFactory.CreateDbContext())
             {
-                List<Letter> lettersBySearchString = db.Letters.Where(x => x.Sender.Contains(searchString) || x.Headers.Contains(searchString)).ToList();
-                List <Letter> lettersByPage = lettersBySearchString.Skip((page - 1) * count).Take(count).ToList();
-                return new LettersQueryResult(lettersByPage, page, count, lettersBySearchString.Count());
+                if (searchString != "")
+                { 
+                    List<Letter> lettersBySearchString = db.Letters.Where(x => x.Sender.Contains(searchString) || x.Headers.Contains(searchString) || x.Text.Contains(searchString)).Skip((page - 1) * count).Take(count).ToList();
+                    return new LettersQueryResult(lettersBySearchString, page, count, GetTotalCount(searchString));
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        private int GetTotalCount(string searchString)
+        {
+            using (var db = _contextFactory.CreateDbContext())
+            {
+                return db.Letters.Where(x => x.Sender.Contains(searchString) || x.Headers.Contains(searchString) || x.Text.Contains(searchString)).Count();
             }
         }
         #endregion
