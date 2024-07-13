@@ -58,7 +58,8 @@ namespace ask2.Repositories
                 }
                 else
                 {
-                    return null;
+                    List<Letter> lettersBySearchString = db.Letters.Skip((page - 1) * count).Take(count).ToList();
+                    return new LettersQueryResult(lettersBySearchString, page, count, db.Letters.Count());
                 }
             }
         }

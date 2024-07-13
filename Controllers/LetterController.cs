@@ -7,7 +7,7 @@ using System.Net;
 
 namespace ask2.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class LetterController : ControllerBase
     {
@@ -34,6 +34,19 @@ namespace ask2.Controllers
                 return BadRequest(new { ErrorText = "Limit должен быть больше 0" });
 
             var lettersByPage = _letterService.GetLetters(page, limit, searchString);
+            return Ok(lettersByPage);
+
+        }
+
+        [HttpGet]
+        public IActionResult GetAllLetters(int page, int limit)
+        {
+            if (page <= 0)
+                return BadRequest(new { ErrorText = "Page должен быть больше 0" });
+            if (limit <= 0)
+                return BadRequest(new { ErrorText = "Limit должен быть больше 0" });
+
+            var lettersByPage = _letterService.GetAllLetters(page, limit);
             return Ok(lettersByPage);
 
         }
