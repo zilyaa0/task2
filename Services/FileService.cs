@@ -30,6 +30,8 @@ namespace ask2.Services
             _configuration = configuration;
         }
         #endregion
+
+        #region Public Methods
         public List<FileName> GetAllFiles(string uniqueId)
         {
             var path = Path.Combine(Environment.CurrentDirectory, "Emails", uniqueId);
@@ -39,5 +41,6 @@ namespace ask2.Services
                 files.Add(new FileName() { Name = f });
             return files;
         }
+        #endregion
     }
 }
