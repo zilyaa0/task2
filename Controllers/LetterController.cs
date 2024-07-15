@@ -13,14 +13,16 @@ namespace ask2.Controllers
     {
         #region fields
         private readonly ILetterService _letterService;
+        private readonly IFileService _filesService;
         private readonly ILogger<LetterController> _logger;
         #endregion
 
         #region constructor
-        public LetterController(ILogger<LetterController> logger, ILetterService letterService)
+        public LetterController(ILogger<LetterController> logger, ILetterService letterService, IFileService fileService)
         {
             _logger = logger;
             _letterService = letterService;
+            _filesService = fileService;
         }
         #endregion
 
@@ -49,6 +51,13 @@ namespace ask2.Controllers
             var lettersByPage = _letterService.GetAllLetters(page, limit);
             return Ok(lettersByPage);
 
+        }
+
+        [HttpGet]
+        public IActionResult GetFilesNames(string uniqueId)
+        {
+            var fileNames = _filesService.GetAllFiles(uniqueId);
+            return Ok(fileNames);
         }
         #endregion
     }

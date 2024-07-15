@@ -17,6 +17,7 @@ namespace ask2
             #region services
             builder.Services.AddSingleton<IImapService, ImapService>();
             builder.Services.AddSingleton<ILetterService, LetterService>();
+            builder.Services.AddSingleton<IFileService, FileService>();
             builder.Services.AddSingleton<ILetterRepository, LetterRepository>();
             builder.Services.AddSingleton<IDbContextFactory<LettersContext>>(provider => new LettersContextFactory(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddControllers();

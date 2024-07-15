@@ -5,6 +5,7 @@ using MailKit;
 using ask2.Repositories;
 using MailKit.Search;
 using MimeKit;
+using System.Collections.Generic;
 
 namespace ask2.Services
 {
@@ -47,11 +48,30 @@ namespace ask2.Services
 
                             var inbox = client.Inbox;
                             inbox.Open(FolderAccess.ReadOnly);
-
-                            for (int i = 0; i < inbox.Count; i++)
+                            var uids = inbox.Search(SearchQuery.All);
+                            var items = inbox.Fetch(uids, MessageSummaryItems.Envelope | MessageSummaryItems.BodyStructure);
+                            for (int i = 0; i < items.Count; i++)
                             {
-                                var message = inbox.GetMessage(i);
-                                AddLetter(new Letter(message.From.ToString(), message.Subject, message.TextBody, message.MessageId));
+                                var list = new List<string>();
+                                foreach (var att in items[i].Attachments.OfType<BodyPartBasic>())
+                                {
+                                    list.Add(att.FileName);
+                                    var part = (MimePart)client.Inbox.GetBodyPart(items[i].UniqueId, att);
+                                    var pathDir = Path.Combine(Environment.CurrentDirectory, "Emails", items[i].UniqueId.ToString());
+                                    if (!Directory.Exists(pathDir))
+                                        Directory.CreateDirectory(pathDir);
+                                    var path = Path.Combine(pathDir, att.FileName);
+                                    if (!File.Exists(path))
+                                    {
+                                        using (var stream = File.Create(path))
+                                        {
+                                            part.Content.DecodeTo(stream);
+                                        }
+                                    }
+                                }
+                                var bodyPart = items[i].TextBody;
+                                var body = (TextPart)inbox.GetBodyPart(items[i].UniqueId, bodyPart);
+                                AddLetter(new Letter(items[i].Envelope.From.ToString(), items[i].Envelope.Subject, body.Text, items[i].Envelope.MessageId, items[i].UniqueId.ToString()));
                             }
                             client.Disconnect(true);
                         }

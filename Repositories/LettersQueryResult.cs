@@ -2,6 +2,10 @@
 
 namespace ask2.Repositories
 {
+    public class FileName
+    {
+        public string Name { get; set; }
+    }
     public class LettersQueryResult
     {
         public List<Letter> Letters { get; set; }
