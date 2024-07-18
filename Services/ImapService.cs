@@ -52,10 +52,8 @@ namespace ask2.Services
                             var items = inbox.Fetch(uids, MessageSummaryItems.Envelope | MessageSummaryItems.BodyStructure);
                             for (int i = 0; i < items.Count; i++)
                             {
-                                var list = new List<string>();
                                 foreach (var att in items[i].Attachments.OfType<BodyPartBasic>())
                                 {
-                                    list.Add(att.FileName);
                                     var part = (MimePart)client.Inbox.GetBodyPart(items[i].UniqueId, att);
                                     var pathDir = Path.Combine(Environment.CurrentDirectory, "Emails", items[i].UniqueId.ToString());
                                     if (!Directory.Exists(pathDir))
