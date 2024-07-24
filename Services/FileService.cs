@@ -9,6 +9,10 @@ using MimeKit;
 using Org.BouncyCastle.Asn1.X509;
 using Microsoft.VisualBasic;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting.Server;
+using System.Xml;
+using System.IO;
 
 namespace ask2.Services
 {
@@ -16,6 +20,7 @@ namespace ask2.Services
     public interface IFileService
     {
         List<FileName> GetAllFiles(string uniqueId);
+        MemoryStream LoadFile(string uniqueId, string fileName);
     }
     #endregion
     class FileService : IFileService
@@ -40,6 +45,16 @@ namespace ask2.Services
             foreach (var f in filesFromLetter)
                 files.Add(new FileName() { Name = f });
             return files;
+        }
+
+        public MemoryStream LoadFile(string uniqueId, string fileName) 
+        {
+            string path = Path.Combine(Environment.CurrentDirectory, "Emails", uniqueId, fileName);
+            byte[] fileData = File.ReadAllBytes(path);
+            MemoryStream stream = new MemoryStream();
+            stream.Write(fileData, 0, fileData.Length);
+            stream.Position = 0;
+            return stream;
         }
         #endregion
     }

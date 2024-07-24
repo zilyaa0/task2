@@ -59,6 +59,13 @@ namespace ask2.Controllers
             var fileNames = _filesService.GetAllFiles(uniqueId);
             return Ok(fileNames);
         }
+
+        [HttpGet]
+        public IActionResult LoadFile(string uniqueId, string fileName)
+        {
+            MemoryStream stream = _filesService.LoadFile(uniqueId, fileName);
+            return Ok(stream);
+        }
         #endregion
     }
 }
